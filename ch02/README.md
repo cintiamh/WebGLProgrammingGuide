@@ -107,3 +107,14 @@ Once you specify the color, the color is retained in the WebGL system and not ch
 until another color is specified by a call to gl.clearColor(). This means you don't
 need to specify the clear color again if at some point in the future you want to
 clear the are again using the same color.
+
+## Draw a Point (Version 1)
+
+For now, just for simplicity, accept that a point drawn at (0.0, 0.0, 0.0) is displayed
+at the center of the `<canvas>` area.
+
+We'll be using a filled rectangle as a point instead of a filled circle because a rectangle
+can be drawn faster than a circle.
+
+WebGL relies on a drawing mechanism called a shader, which offers a flexible and
+powerful mechanism for drawing 2D and 3D objects and must be used by all WebGL applications.
