@@ -97,3 +97,13 @@ function start() {
     gl.clear(gl.COLOR_BUFFER_BIT | gl.DEPTH_BUFFER_BIT);
 }
 ```
+
+The getContext method for WebGL can have different arguments depending on the browser.
+Possible arguments are: "webgl", "experimental-webgl", "webkit-3d", "moz-webgl";
+
+Because WebGL is based on OpenGL, color values range from 0.0 to 1.0.
+
+Once you specify the color, the color is retained in the WebGL system and not changed
+until another color is specified by a call to gl.clearColor(). This means you don't
+need to specify the clear color again if at some point in the future you want to
+clear the are again using the same color.
