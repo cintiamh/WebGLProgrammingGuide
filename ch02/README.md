@@ -165,3 +165,6 @@ The fragment is a WebGL term that you can consider as a kind of pixel (picture e
 
 The shaders are read from the JavaScript and stored in the WebGL system ready to be used
 for drawing.
+
+The shader programs must be written in the OpenGL ES shading language (GLSL ES),
+which is similar to the C language.
