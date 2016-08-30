@@ -168,3 +168,9 @@ for drawing.
 
 The shader programs must be written in the OpenGL ES shading language (GLSL ES),
 which is similar to the C language.
+
+## Initializing Shaders
+
+```
+Retrieve the <canvas> element => Get the rendering context for WebGL => Initialize shaders => Set the color for clearing <canvas> => Clear <canvas> => Draw
+```
