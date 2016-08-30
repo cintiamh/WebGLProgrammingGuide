@@ -174,3 +174,73 @@ which is similar to the C language.
 ```
 Retrieve the <canvas> element => Get the rendering context for WebGL => Initialize shaders => Set the color for clearing <canvas> => Clear <canvas> => Draw
 ```
+
+WebGL applications consists of a JavaScript program executed by the browser and shader programs that are executed within the
+WebGL system.
+
+* The vertex shader specifies the position of a point and its size. In this sample program, the position is (0.0, 0.0, 0.0)
+and the size is 10.0.
+* The fragment shader specifies the color of the fragments displaying the point. In this simple program, they are red
+(1.0, 0.0, 0.0, 1.0).
+
+### Vertex Shader
+
+
+`gl_Position` and `gl_PointSize` are two built in variables for vertex shader. `gl_Position` is required and `gl_PointSize`
+default value is 1.0.
+
+| Type and variable | Description |
+|-------------------|-------------|
+| `vec4 gl_Position` | Specifies the position of a vertex |
+| `float gl_PointSize` | Specifies the size of a point (in pixels) |
+
+Note that because GLSL ES is typed, if the type is float, it needs to be `10.0`, for example, and not `10`. Because `10`
+will be interpreted as integer number, not float.
+
+Note that the value that is assigned to `gl_Position` has `1.0` added as a fourth component. This four-component coordinate
+is called homogeneous coordinate and is often used in 3D graphics for processing three-dimensional information efficiently.
+
+### Fragment Shader
+
+A fragment is a pixel displayed on the screen.
+
+The fragment shader is a program that processes this informationin preparation for displaying the fragment on the screen.
+
+The job of the shader is to set the color of the point as its per-fragment operation. `gl_FragColor` is a built-in variable
+only available in fragment shader, it controls the color of a fragment.
+
+| Type and variable | Description |
+|-------------------|-------------|
+| `vec4 gl_FragColor` | Specifies the color of a fragment |
+
+### The Draw Operation
+
+`gl.drawArrays` is a powerful function that is capable of drawing a variety of basic shapes.
+
+**`gl.drawArrays(mode, first, count)`**
+
+Execute a vertex shader to draw shapes specified by the `mode` parameter
+
+| Parameter | Description |
+|-----------|-------------|
+| `mode`    | Specifies the type of shape to be drawn. The following symbolic constants are accepted: `gl.POINTS`, `gl.LINES`, `gl.LINE_STRIP`, `gl.LINE_LOOP`, `gl.TRIANGLES`, `gl.TRIANGLE_STRIP`, and `gl.TRIANGLE_FAN`. |
+| `first`   | Specifies which vertex to start drawing from (integer) |
+| `count`   | Specifies the number of vertices to be used (integer) |
+
+## The WebGL Coordinate System
+
+* x-axis: horizontal direction, right direction positive.
+* y-axis: vertical direction, up direction is positive.
+* z-axis: the direction from the screen to the viewer (positive).
+
+And the viewer eye is located at the origin (0.0, 0.0, 0.0).
+
+**right-handed coordinate system**
+
+### Default values
+
+* The center position of `<canvas>`: (0.0, 0.0, 0.0)
+* The two edges of the x-axis of the `<canvas>`: (-1.0, 0.0, 0.0) and (1.0, 0.0, 0.0)
+* The two edges of the y-axis of the `<canvas>`: (0.0, -1.0, 0.0) and (0.0, 1.0, 0.0)
+
+## Draw a Point (Version 2)
