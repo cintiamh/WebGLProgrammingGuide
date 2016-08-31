@@ -244,3 +244,105 @@ And the viewer eye is located at the origin (0.0, 0.0, 0.0).
 * The two edges of the y-axis of the `<canvas>`: (0.0, -1.0, 0.0) and (0.0, 1.0, 0.0)
 
 ## Draw a Point (Version 2)
+
+### Using attribute variables
+
+Ways to pass data to a vertex shader: attribute variable and uniform variable.
+
+* attribute variable: passes data that differs for each vertex. (prefix `a_`)
+* uniform variable: passes data that is the same in each vertex. (prefix `u_`)
+
+The attribute variable is a GLSL ES variable which is used to pass data from outside a vertex shader and is
+only available to vertex shaders.
+
+1. Prepare the attribute variable for the vertex position in the vertex shader.
+2. Assign the attribute variable to the `gl_Position` variable.
+3. Pass the data to the attribute variable.
+
+### Sample program (HelloPoint2.js)
+
+```javascript
+// vertex shader program
+var VSHADER_SOURCE = 'attribute vec4 a_Position;\n' +
+    'void main() {\n' +
+  'gl_Position = a_Position;\n' +
+  'gl_PointSize = 10.0;\n' +
+  '}\n';
+
+// Fragment shader program
+var FSHADER_SOURCE = 'void main() {\n' +
+  'gl_FragColor = vec4(1.0, 0.0, 0.0, 1.0);\n' +
+  '}\n';
+
+function main() {
+  var canvas = document.getElementById('webgl');
+  var gl = canvas.getContext("webgl") || canvas.getContext("experimental-webgl");
+  // If we don't have a GL context, give up now
+  if (!gl) {
+      alert("Unable to initialize WebGL. Your browser may not support it.");
+      return;
+  }
+  // Initialize shaders
+  if (!initShaders(gl, VSHADER_SOURCE, FSHADER_SOURCE)) {
+    console.log('Failed to initialize shaders.');
+    return;
+  }
+
+  // Get the storage location of attribute variable
+  var a_Position = gl.getAttribLocation(gl.program, 'a_Position');
+  if (a_Position < 0) {
+    console.log('Failed to get the storage location of a_Position');
+    return;
+  }
+
+  // Pass vertex position to attribute variable
+  gl.vertexAttrib3f(a_Position, 0.0, 0.0, 0.0);
+
+  gl.clearColor(0.0, 0.0, 0.0, 1.0);
+  gl.clear(gl.COLOR_BUFFER_BIT);
+
+  // Draw a point
+  gl.drawArrays(gl.POINTS, 0, 1);
+}
+```
+
+#### Getting the Storage Location of an Attribute Variable
+
+```javascript
+var a_Position = gl.getAttribLocation(gl.program, 'a_Position');
+```
+
+**`gl.getAttribLocation(program, name)`**
+
+Retrieve the storage location of the attribute variable specified by the name parameter.
+
+##### Parameters
+* program: specifies the program object that holds a vertex shader and a fragment shader.
+* name: Specifies the name of the attribute variable whose location is to be retrieved.
+
+##### Return Value
+* greater than or equal to 0: The location of the specified attribute variable.
+* -1: The specified attribute variable does not exist or its name starts with the reserved prefix `gl_` or `webgl_`.
+
+#### Assigning a Value to an Attribute Variable
+
+```javascript
+gl.vertexAttrib3f(a_Position, 0.0, 0.0, 0.0);
+```
+
+**`gl.vertexAttrib3f(location, v0, v1, v2)`**
+
+Assign the data (v0, v1, v2) to the attribute variable specified by location.
+
+#### Family Methods of gl.vertexAttrib3f()
+
+**`gl.vertexAttrib1f(location, v0)`**
+**`gl.vertexAttrib2f(location, v0, v1)`**
+**`gl.vertexAttrib3f(location, v0, v1, v2)`**
+**`gl.vertexAttrib4f(location, v0, v1, v2, v3)`**
+
+The vector versions of these methods are also available. Their names contains `v` (vector), and they take
+a typed array as a parameter.
+
+## Draw a Point with Mouse Click
+
