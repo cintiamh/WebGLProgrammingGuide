@@ -346,3 +346,81 @@ a typed array as a parameter.
 
 ## Draw a Point with Mouse Click
 
+```javascript
+// vertex shader program
+var VSHADER_SOURCE = 'attribute vec4 a_Position;\n' +
+    'void main() {\n' +
+  'gl_Position = a_Position;\n' +
+  'gl_PointSize = 10.0;\n' +
+  '}\n';
+
+// Fragment shader program
+var FSHADER_SOURCE = 'void main() {\n' +
+  'gl_FragColor = vec4(1.0, 0.0, 0.0, 1.0);\n' +
+  '}\n';
+
+function main() {
+  var canvas = document.getElementById('webgl');
+  var gl = canvas.getContext("webgl") || canvas.getContext("experimental-webgl");
+  // If we don't have a GL context, give up now
+  if (!gl) {
+      alert("Unable to initialize WebGL. Your browser may not support it.");
+      return;
+  }
+  // Initialize shaders
+  if (!initShaders(gl, VSHADER_SOURCE, FSHADER_SOURCE)) {
+    console.log('Failed to initialize shaders.');
+    return;
+  }
+
+  // Get the storage location of attribute variable
+  var a_Position = gl.getAttribLocation(gl.program, 'a_Position');
+  if (a_Position < 0) {
+    console.log('Failed to get the storage location of a_Position');
+    return;
+  }
+
+  canvas.onmousedown = function(ev) {
+    click(ev, gl, canvas, a_Position);
+  };
+
+  gl.clearColor(0.0, 0.0, 0.0, 1.0);
+  gl.clear(gl.COLOR_BUFFER_BIT);
+}
+
+// The array for a mouse press
+var g_points = [];
+
+function click(ev, gl, canvas, a_Position) {
+  var x = ev.clientX;
+  var y = ev.clientY;
+  var rect = ev.target.getBoundingClientRect();
+  x = ((x - rect.left) - canvas.width/2) / (canvas.width / 2);
+  y = (canvas.height / 2 - (y - rect.top))/(canvas.height/2);
+  g_points.push(x);
+  g_points.push(y);
+  gl.clear(gl.COLOR_BUFFER_BIT);
+  var len = g_points.length;
+  for (var i = 0; i < len; i += 2) {
+    gl.vertexAttrib3f(a_Position, g_points[i], g_points[i+1], 0.0);
+    gl.drawArrays(gl.POINTS, 0, 1);
+  }
+}
+```
+
+You cannot use the coordinates directly because:
+
+1. The coordinate is the position in the "client area" in the browser, not in the `<canvas>`.
+2. The coordinate system of the `<canvas>` is different from that of WebGL in terms of their origin and the direction of the y-axis.
+
+You need to convert to WebGL's -1 to 1 range. (proportionally to canvas size)
+
+If you remove the `gl.clear(gl.COLOR_BUFFER_BIT)` line, you might see a white background. This is because WebGL reinitializes the color
+buffer to the default value `(0.0, 0.0, 0.0, 0.0)` after drawing the point. The alpha component of the default value is 0.0, 
+which means the color is transparent.
+
+If you don't want this behavior, you should use `gl.clearColor()` to specify the clear color and then always call `gl.clear()` before drawing something.
+
+### Change the Point Color
+
+Now you need to pass the data to a "fragment shader", not to a vertex shader.
