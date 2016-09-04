@@ -198,7 +198,6 @@ Execute a vertex shader to draw shapes specified by the mode parameter.
 * `first`: Specifies what number-th vertex is used to draw from (integer)
 * `count`: Specifies the number of vertices to be used (integer)
 
-
 ## Hello triangle
 
 ## Moving, rotating, and scaling
