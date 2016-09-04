@@ -104,6 +104,100 @@ There are five steps needed to pass multiple data values to a vertex shader thro
 4. Assign the buffer object to an attribute variable: `gl.vertexAttribPointer()`
 5. Enable assignment: `gl.enableVertexAttribArray()`
 
+`gl.createBuffer()`
+`gl.deleteBuffer(buffer)`
+
+After creating a buffer object, you have to bind it to a "target". The target tells WebGL what type of
+data the buffer object contains.
+
+`gl.bindBuffer(target, buffer)`
+
+Target can be:
+* `gl.ARRAY_BUFFER`: Vertex data.
+* `gl.ELEMENT_ARRAY_BUFFER`: index values pointing to vertex data.
+
+`gl.bufferData(target, data, usage)`
+
+Allocates storage and write the data specified by data to the buffer object bound to target.
+
+`usage`: Specifies a hint about how the program is going to use the data stored in the buffer object. Used for
+optimization.
+
+* `gl.STATIC_DRAW`: The buffer object data will be specified once and used many times to draw shapes.
+* `gl.STREAM_DRAW`: The buffer object data will be specified once and used a few times do draw shapes.
+* `gl.DYNAMIC_DRAW`: The buffer object data will be specified repeatedly and used many times to draw shapes.
+
+### Typed Arrays
+
+WebGL often deals with large quantities of data of the same type, such as vertex coordinates and colors. For
+optimization, typed arrays had been introduced for each data type.
+
+| Typed Array | # of Bytes / element | Description (C types) |
+|-------------|----------------------|-----------------------|
+| `Int8Array` | 1 | 8-bit signed integer (signed char) |
+| `Uint8Array` | 1 | 8-bit unsigned integer (unsigned char) |
+| `Int16Array` | 2 | 16-bit signed integer (signed short) |
+| `Uint16Array` | 2 | 16-bit unsigned integer (unsigned short) |
+| `Int32Array` | 4 | 32-bit signed integer (signed int) |
+| `Uint32Array` | 4 | 32-bit unsigned integer (unsigned int) |
+| `Float32Array` | 4 | 32-bit floating point number (float) |
+| `Float64Array` | 8 | 64-bit floating point number (double) |
+
+Unlike the standard `Array` object in JavaScript, the methods `push()` and `pop()` are not supported.
+
+| Methods, Properties, Constants | Description |
+|--------------------------------|-------------|
+| `get(index)` | Get the index-th element |
+| `set(index, value)` | Set value to the index-th element |
+| `set(array, offset)` | Set the elements of array from offset-th element |
+| `length` | The length of the array |
+| `BYTES_PER_ELEMENT` | The number of bytes per element in the array |
+
+#### Assign the buffer object to an Attribute Variable
+
+You can use `gl.vertexAttrib[1234]f()` to assign a single data value to an attribute variable.
+
+With `gl.vertexAttribPointer()` we can assign a buffer object to an attribute variable.
+
+`gl.vertexAttribPointer(location, size, type, normalized, stride, offset)`
+
+Assign the buffer object bound to `gl.ARRAY_BUFFER` to the attribute variable specified by location.
+
+* `location`: Specifies the storage location of an attribute variable.
+* `size`: Specifies the number of components per vertex in the buffer object (1 to 4).
+* `type`: Specifies the data format using one of the following:
+    * `gl.UNSIGNED_BYTE` for `Uint8Array`.
+    * `gl.SHORT` for `Int16Array`.
+    * `gl.UNSIGNED_SHORT` for `Uint16Array`
+    * `gl.INT` for `Int32Array`
+    * `gl.UNSIGNED_INT` for `Uint32Array`
+    * `gl.FLOAT` for `Float32Array`
+* `normalized`: Either `true` or `false` to indicate whether nonfloating data should be normalized to [0, 1]
+or [-1, 1]
+* `stride`: Specifies the number of bytes between different vertex data elements, or zero for default stride.
+* `offset`: Specifies the offset in bytes in a buffer object to indicate what number-th byte the vertex data
+is stored from. If the data is stored from the beginning, offset is 0.
+
+`gl.enableVertexAttribArray(location)`
+
+`gl.disableVertexAttribArray(location)`
+
+Enable the assignment fo a buffer object to the attribute variable specified by location.
+
+You can't use `gl.vertexAttrib[1234]f()` and object buffer simultaneously.
+
+#### The second and third parameters of gl.drawArrays()
+
+`gl.drawArrays(mode, first, count)`
+
+Execute a vertex shader to draw shapes specified by the mode parameter.
+
+* `mode`: Specifies the type of shape to be drawn.
+    * `gl.POINTS`, `gl.LINES`, `gl.LINE_STRIP`, `gl.LINE_LOOP`, `gl.TRIANGLES`, `gl.TRIANGLE_STRIP`,
+    `gl.TRIANGLE_FAN`
+* `first`: Specifies what number-th vertex is used to draw from (integer)
+* `count`: Specifies the number of vertices to be used (integer)
+
 
 ## Hello triangle
 
