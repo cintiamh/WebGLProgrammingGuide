@@ -284,6 +284,22 @@ Differences from MultiPoint are:
 | Triangle strips | `gl.TRIANGLE_STRIP` | A series of connected triangles in strip fashion. |
 | Triangle fans | `gl.TRIANGLE_FAN` | A series of connected triangles sharing the first vertex in fan-like fashion. |
 
+### Hello Rectangle (HelloQuad)
+
+WebGL cannot draw a rectangle directly, so you need to divide the rectangle into two triangles.
+
+You need to add an extra vertex coordinate and you need to pay attention to the order of vertices.
+
+```javascript
+// extra point added, the order is important
+var vertices = new Float32Array([
+  -0.5, 0.5, -0.5, -0.5, 0.5, 0.5, 0.5, -0.5
+]);
+var n = 4; // The number of vertices
+  
+gl.drawArrays(gl.TRIANGLE_STRIP, 0, n);
+```
 
 ## Moving, rotating, and scaling
+
 
