@@ -302,4 +302,14 @@ gl.drawArrays(gl.TRIANGLE_STRIP, 0, n);
 
 ## Moving, rotating, and scaling
 
+### Translation
 
+To move the shape, you just need to add a translation distance for each direction to each component of the coordinates.
+ 
+```
+x' = x + Tx
+y' = y + Ty
+z' = z + Tz
+```
+
+They clearly aren't a per-fragment operation, so you don't need to worry about the fragment shader.
