@@ -1,13 +1,15 @@
 // MultiPoint.js (c) 2012 matsuda
 var VSHADER_SOURCE =
   'attribute vec4 a_Position;\n' +
+    'uniform vec4 u_Translation;\n' +
   'void main() {\n' +
-  '  gl_Position = a_Position;\n' +
+  '  gl_Position = a_Position + u_Translation;\n' +
   '}\n';
 var FSHADER_SOURCE =
   'void main() {\n' +
   '  gl_FragColor = vec4(1.0, 0.0, 0.0, 1.0);\n' +
   '}\n';
+ var Tx = 0.5, Ty = 0.5, Tz = 0.0;
 
 function main() {
   var canvas = document.getElementById('webgl');
@@ -25,6 +27,8 @@ function main() {
     console.log('Failed to set the positions of the vertices');
     return;
   }
+  var u_Translation = gl.getUniformLocation(gl.program, 'u_Translation');
+  gl.uniform4f(u_Translation, Tx, Ty, Tz, 0.0);
   gl.clearColor(0, 0, 0, 1);
   gl.clear(gl.COLOR_BUFFER_BIT);
   gl.drawArrays(gl.TRIANGLES, 0, n);
