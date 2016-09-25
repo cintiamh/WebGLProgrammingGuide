@@ -394,3 +394,56 @@ Information needed for rotation:
 * Rotation axis - the axis the shape will be rotated around.
 * Rotation direction - clockwise or counterclockwise.
 * Rotation angle - the number of degrees the shape will be rotated through.
+
+In rotation, if the angle is positive, the rotation is performed in a counterclockwise direction around the rotation axis
+looking at the shape toward the negative direction of the z-axis, this is called positive rotation. (right hand rule rotation).
+
+```
+r - distance from the origin to the point p
+alpha - rotation angule from the x-axis to the point
+
+x = r cos alpha
+y = r sin alpha
+```
+
+### Sample program (RotatedTriangle.js)
+
+```javascript
+var VSHADER_SOURCE =
+  // x' = x cos b - y sin b
+  // y' = x sin b + y cos b
+  // z' = z
+  'attribute vec4 a_Position;\n' +
+  'uniform float u_CosB, u_SinB;\n' +
+  'void main() {\n' +
+  '  gl_Position.x = a_Position.x * u_CosB - a_Position.y * u_SinB;\n' +
+  '  gl_Position.y = a_Position.x * u_SinB - a_Position.y * u_CosB;\n' +
+  '  gl_Position.z = a_Position.z;\n' +
+  '  gl_Position.w = 1.0;\n' +
+  '}\n';
+  
+  // Pass the data required to rotate the shape to the vertex shader
+    // Convert to radians
+    var radian = Math.PI * ANGLE / 180.0;
+    var cosB = Math.cos(radian);
+    var sinB = Math.sin(radian);
+    var u_CosB = gl.getUniformLocation(gl.program, 'u_CosB');
+    var u_SinB = gl.getUniformLocation(gl.program, 'u_SinB');
+    gl.uniform1f(u_CosB, cosB);
+    gl.uniform1f(u_SinB, sinB);
+```
+
+### Transformation Matrix: Rotation
+
+The transformation matrix is excellent for manipulating computer graphics.
+    
+```
+| x' |   | cos beta  -sin beta  0 |   | x |
+| y' | = | sin beta  cos beta   0 | x | y |
+| z' |   |    0          0      1 |   | z |
+```
+
+This matrix is called a transformation matrix because it "transforms" the right-side vector(x, y, z) to the left-side
+vector (x', y', z'). The transformation matrix representing a rotation is called a rotation matrix.
+
+### Transformation Matrix: Translation

@@ -1,4 +1,3 @@
-// MultiPoint.js (c) 2012 matsuda
 var VSHADER_SOURCE =
   'attribute vec4 a_Position;\n' +
     'uniform vec4 u_Translation;\n' +
